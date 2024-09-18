@@ -252,7 +252,11 @@ impl Display for WrappedCommand {
             .collect::<Vec<String>>()
             .join(" ");
 
-        write!(f, "{} {} {}", envs, self.program.to_string_lossy(), args)
+        let mut program_path = self.program.to_string_lossy();
+        if program_path.contains(' ') {
+            *program_path.to_mut() = format!("\"{}\"", program_path);
+        }
+        write!(f, "{} {} {}", envs, program_path, args)
     }
 }
 
